@@ -14,11 +14,19 @@
 Список использованной литературы:
 
 https://hackingvolvo.blogspot.com/
+
 https://hackingvolvoxc90.blogspot.com/
+
 https://www.drive2.com/l/523338948592799298/
+
 https://www.drive2.com/l/572036593464902026/
+
 https://www.drive2.com/l/712830156913249071/
+
 https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
+
 https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
+
 https://github.com/vtl/volvo-ddd
+
 https://github.com/vtl/volvo-kenwood
