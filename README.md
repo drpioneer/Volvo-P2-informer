@@ -12,6 +12,8 @@
 Схема электрических соединений:
 ![sch](https://github.com/user-attachments/assets/a9c4d5ac-88a2-4806-ad35-0f1725c3ff0b)
 
+![maketka](https://github.com/user-attachments/assets/5be5c6c2-51c5-4f7b-aff3-67c877ceeaf5)
+
 Список использованной литературы:
 
 https://hackingvolvo.blogspot.com/
