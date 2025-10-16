@@ -10,7 +10,7 @@
 
 Прототип устройства:
 
-![maketka](https://github.com/user-attachments/assets/5be5c6c2-51c5-4f7b-aff3-67c877ceeaf5)
+![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
 Список использованной литературы:
 
