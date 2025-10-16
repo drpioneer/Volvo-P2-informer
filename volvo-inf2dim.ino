@@ -1,7 +1,9 @@
 /*
  * VOLVO P2 Informer
+ * https://github.com/drpioneer/Volvo-P2-informer/
  * Designed to ArduinoNano & 2x MCP2515
- * (c) 2025 Code uses ideas and practices of users: vtl1349, Olegelm, ten-da, HalfPunchMan, astaninss, drpioneer
+ * tested on Volvo XC90 2011
+ * (c) 2025 Code uses ideas and practices of authors: vtl1349, Olegelm, ten-da, HalfPunchMan, astaninss, drPioneer and others ...
  */
 
 #include <SPI.h>
@@ -43,14 +45,12 @@ MCP_CAN         HS_CAN_CS     (10);                                             
 #define            CEML_ID    0x02803008                                              // central electronic module LS-CAN 2005+
 #define            CEMH_ID    0x03200408                                              // central electronic module HS-CAN 2005+
 #define             DIA_ID    0x000ffffe                                              // diagnostic tool (VIDA)
-//#define           DIA_ID    0x080ffffe                                              // diagnostic tool (VIDA)
 #define        LS_CAN_MASK    (SWM_ID | CEML_ID)                                      // mask to reduce load from LS-CAN on Arduino
-#define        HS_CAN_MASK    (TCM_ID | DIA_ID | CEMH_ID)                             // mask to reduce load from HS-CAN on Arduino
+#define        HS_CAN_MASK    (TCM_ID | ECM_ID | DEM_ID)                              // mask to reduce load from HS-CAN on Arduino
 
-#define           DELAY_MS    30                                                      // delay (ms)
-#define              PAUSE    250000                                                  // pause (ms)
-#define             ENABLE    0
-#define            DISABLE    1
+#define           DELAY_MS    30                                                      // delay (in miliseconds)
+#define              PAUSE    50000                                                   // pause (in cycles)
+#define           REQUESTS    70                                                      // count of requests in CAN bus
 
 //uint8_t       ena1SCR[8]  = {0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05};       // command 1 of 2 to turn on screen, 2000-2001
 //uint8_t       ena2SCR[8]  = {0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};       // command 2 of 2 to turn on screen, 2000-2001
@@ -60,6 +60,7 @@ uint8_t          disSCR[8]  = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04}; 
 uint8_t          clrSCR[8]  = {0xe1, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};       // command to clear screen
 uint8_t         tempATF[8]  = {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00};       // transmission fluid temperature request
 uint8_t         pumpCur[8]  = {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00};       // DEM pump current request
+uint8_t          engRPM[8]  = {0xcd, 0x7a, 0xa6, 0x10, 0x93, 0x01, 0x00, 0x00};       // ECM engine RPM
 
 // LS/HS-CAN Variables
 uint32_t          lsCANtxId = 0;                                                      // header of LS-CAN packet for sending
@@ -81,7 +82,7 @@ uint8_t            hsCANext = 1;                                                
 uint8_t          actScreen  = 0;                                                      // index of current screen
 uint32_t         progCycle  = 0;                                                      // cycle counter for determining elapsed time
 
-boolean ls_can_ok = false;
+boolean ls_can_ok = false, readit = false;
 boolean SetupLSCAN()
 {
   Serial.println("LS-CAN shield initialize...");
@@ -148,7 +149,7 @@ boolean SetupHSCAN()
       err++;
     if (HS_CAN_CS.init_Filt(1, 1,      DEM_ID) != MCP2515_OK)
       err++;
-    if (HS_CAN_CS.init_Filt(2, 1,     CEMH_ID) != MCP2515_OK)
+    if (HS_CAN_CS.init_Filt(2, 1,      ECM_ID) != MCP2515_OK)
       err++;
     if (err)
       hs_can_ok = false;
@@ -245,6 +246,7 @@ void ActSWM (uint8_t *buf)
   if (buf[7] == 0xbf)                                                                 // when 'RESET' button on SWM is pressed
   {
     actScreen++;                                                                      // increasing index of information screen
+    readit = false;
     progCycle = PAUSE;
     Serial.println("Pressed 'RESET' key on SWM");
   } 
@@ -276,68 +278,96 @@ void loop()
   {
     switch (actScreen)                                                                // switch according to active screen
     {
-      case 0:
-        Serial.println("Case 0: disable screen");
-        DisSCR();                                                                     // disable screen on DIM
-        progCycle = 0;
-        break;
       case 1:
-        Serial.println("Case 1: disable screen");
-        DisSCR();                                                                     // disable screen on DIM
-        progCycle = 0;
-        break;
-      case 2:
-        Serial.println("Case 2: enable scree + greating");
+        Serial.println("Case 1: enable screen + greating");
         EnaSCR();
         ClrSCR();
         PrnSCR("*   VOLVO P2   **   INFORMER   *");
         progCycle = 0;
         break;
-      case 3:
-        Serial.println("Case 3: ATF temperature");
-        for (uint8_t i = 0; i < 100; i++)
+
+      case 2:
+        Serial.println("Case 2: ATF temperature");
+        if (!readit)
+          PrnSCR(String("--C ATF TEMP"));
+        for (uint8_t i = 0; i < REQUESTS; i++)
         {
           HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, tempATF);                                // sending request to get AT temperature
-          if (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                               // check if data is coming on shield
+          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                               // check if data is coming on shield
           {
             HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
-            Serial.print("HS-CAN ID: "); Serial.println(hsCANrxId, HEX);
             if (hsCANrxId == TCM_ID)                                                  // comparing packet ID
             {
-              Serial.println("Found required ID");
+              Serial.print("Found required ID: ");
+              Serial.println(hsCANrxId, HEX);
               PrnSCR(String(256L * hsCANrxBuf[6] + hsCANrxBuf[7]) + "C ATF TEMP");    // print AT temperature in celcius
+              readit = true;
               break;
             }
           }
         }
         progCycle = 0;
         break;
-      case 4:
-        Serial.println("Case 4: DEM pump current");
-        for (uint8_t i = 0; i < 100; i++)
+
+      case 3:
+        Serial.println("Case 3: DEM pump current");
+        if (!readit)
+          PrnSCR(String("---MA PUMP CURR"));
+        for (uint8_t i = 0; i < REQUESTS; i++)
         {
           HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, pumpCur);                                // sending request to DEM pump current
-          if (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                               // check if data is coming on shield
+          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                               // check if data is coming on shield
           {
             HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
-            Serial.print("HS-CAN ID: "); Serial.println(hsCANrxId, HEX);
             if (hsCANrxId == DEM_ID)                                                  // comparing packet ID
             {
-              Serial.println("Found required ID");
+              Serial.print("Found required ID: ");
+              Serial.println(hsCANrxId, HEX);
               PrnSCR(String(256L * hsCANrxBuf[5] + hsCANrxBuf[6]) + "MA PUMP CURR");  // print DEM pump current
+              readit = true;
               break;
             }
           }
         }
         progCycle = 0;
         break;
+
+      case 4:
+        Serial.println("Case 4: ECM engine RPM");
+        if (!readit)
+          PrnSCR(String("----RPM ENGINE"));
+        for (uint8_t i = 0; i < REQUESTS; i++)
+        {
+          HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, engRPM);                                 // sending request to DEM pump current
+          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                            // check if data is coming on shield
+          {
+            HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
+            if (hsCANrxId == ECM_ID)                                                  // comparing packet ID
+            {
+              Serial.print("Found required ID: ");
+              Serial.println(hsCANrxId, HEX);
+              PrnSCR(String((256 * hsCANrxBuf[5] + hsCANrxBuf[6])/4) + "RPM ENGINE"); // print ECM boost pressure
+              readit = true;
+              break;
+            }
+          }
+        }
+        progCycle = 0;
+        break;
+
       case 5:
-        Serial.println("Case 5: goto Case 0");
+        Serial.println("Case 5: nothing");
+        if (!readit)
+          PrnSCR(String("NOTHING"));
+        progCycle = 0;
+        break;
+
+      default:
+        Serial.println("Default case: disable screen");
+        DisSCR();                                                                     // disable screen on DIM
         actScreen = 0;
         progCycle = 0;
-        delay (300);
-        break;
-      default:
+        delay (500);
         break;
     }
   }
