@@ -60,7 +60,7 @@ uint8_t          disSCR[8]  = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04}; 
 uint8_t          clrSCR[8]  = {0xe1, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};       // command to clear screen
 uint8_t         tempATF[8]  = {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00};       // transmission fluid temperature request
 uint8_t         pumpCur[8]  = {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00};       // DEM pump current request
-uint8_t          engRPM[8]  = {0xcd, 0x7a, 0xa6, 0x10, 0x93, 0x01, 0x00, 0x00};       // ECM engine RPM
+uint8_t          engRPM[8]  = {0xcd, 0x7a, 0xa6, 0x10, 0x93, 0x01, 0x00, 0x00};       // ECM engine RPM request
 
 // LS/HS-CAN Variables
 uint32_t          lsCANtxId = 0;                                                      // header of LS-CAN packet for sending
@@ -78,7 +78,6 @@ uint8_t       hsCANrxBuf[8] = {0};                                              
 uint8_t          hsCANrxLen = 8;                                                      // length of receiving buffer for HS-CAN
 uint8_t            hsCANext = 1;                                                      // extended attribute of HS-CAN packet (29 bit)
 
-// display parameters
 uint8_t          actScreen  = 0;                                                      // index of current screen
 uint32_t         progCycle  = 0;                                                      // cycle counter for determining elapsed time
 
@@ -274,7 +273,7 @@ void loop()
   if (progCycle > PAUSE)
     progCycle = 0;
   ReadLSCAN();                                                                        // listening LS-CAN
-  if (progCycle == PAUSE)                                                             // every 5000 cycles (conditional 5 seс)
+  if (progCycle == PAUSE)                                                             // every 50 000 cycles (conditional 1 seс)
   {
     switch (actScreen)                                                                // switch according to active screen
     {
@@ -293,7 +292,7 @@ void loop()
         for (uint8_t i = 0; i < REQUESTS; i++)
         {
           HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, tempATF);                                // sending request to get AT temperature
-          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                               // check if data is coming on shield
+          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                            // check if data is coming on shield
           {
             HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
             if (hsCANrxId == TCM_ID)                                                  // comparing packet ID
@@ -316,7 +315,7 @@ void loop()
         for (uint8_t i = 0; i < REQUESTS; i++)
         {
           HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, pumpCur);                                // sending request to DEM pump current
-          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                               // check if data is coming on shield
+          while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                            // check if data is coming on shield
           {
             HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
             if (hsCANrxId == DEM_ID)                                                  // comparing packet ID
@@ -338,7 +337,7 @@ void loop()
           PrnSCR(String("----RPM ENGINE"));
         for (uint8_t i = 0; i < REQUESTS; i++)
         {
-          HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, engRPM);                                 // sending request to DEM pump current
+          HS_CAN_CS.sendMsgBuf(DIA_ID, 1, 8, engRPM);                                 // sending request to ECM engine RPM
           while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                            // check if data is coming on shield
           {
             HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
