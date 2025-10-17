@@ -45,12 +45,16 @@ MCP_CAN         HS_CAN_CS     (10);                                             
 #define            CEML_ID    0x02803008                                              // central electronic module LS-CAN 2005+
 #define            CEMH_ID    0x03200408                                              // central electronic module HS-CAN 2005+
 #define             DIA_ID    0x000ffffe                                              // diagnostic tool (VIDA)
-#define        LS_CAN_MASK    (SWM_ID | CEML_ID)                                      // mask to reduce load from LS-CAN on Arduino
-#define        HS_CAN_MASK    (TCM_ID | ECM_ID | DEM_ID)                              // mask to reduce load from HS-CAN on Arduino
+#define       LS_CAN_MASK1    (SWM_ID |    0x00)                                      // mask1 to reduce load of Arduino when listening of LS-CAN
+#define       LS_CAN_MASK2    (CCM_ID | CEML_ID)                                      // mask2 to reduce load of Arduino when listening of LS-CAN
+#define       HS_CAN_MASK1    (TCM_ID |  ECM_ID)                                      // mask1 to reduce load of Arduino when listening of HS-CAN
+#define       HS_CAN_MASK2    (DEM_ID |    0x00)                                      // mask2 to reduce load of Arduino when listening of HS-CAN
 
+#define                EXT    1                                                       // CAN packet parameter: EXTENDED
+#define                LEN    8                                                       // CAN packet parameter: LENGTH
 #define           DELAY_MS    30                                                      // delay (in miliseconds)
 #define              PAUSE    50000                                                   // pause (in cycles)
-#define           REQUESTS    70                                                      // count of requests in CAN bus
+#define           REQUESTS    50                                                      // count of requests in CAN bus
 
 //uint8_t       ena1SCR[8]  = {0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05};       // command 1 of 2 to turn on screen, 2000-2001
 //uint8_t       ena2SCR[8]  = {0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};       // command 2 of 2 to turn on screen, 2000-2001
@@ -98,15 +102,21 @@ boolean SetupLSCAN()
   if (ls_can_ok)
   {
     uint8_t err = 0;
-    if (LS_CAN_CS.init_Mask(0, 1, LS_CAN_MASK) != MCP2515_OK)
+    if (LS_CAN_CS.init_Mask(0, EXT, LS_CAN_MASK1) != MCP2515_OK)
       err++;
-    if (LS_CAN_CS.init_Mask(1, 1, LS_CAN_MASK) != MCP2515_OK)
+    if (LS_CAN_CS.init_Mask(1, EXT, LS_CAN_MASK2) != MCP2515_OK)
       err++;
-    if (LS_CAN_CS.init_Filt(0, 1,      SWM_ID) != MCP2515_OK)
+    if (LS_CAN_CS.init_Filt(0, EXT,       SWM_ID) != MCP2515_OK)
       err++;
-    if (LS_CAN_CS.init_Filt(1, 1,      CCM_ID) != MCP2515_OK)
+    if (LS_CAN_CS.init_Filt(1, EXT,         0x00) != MCP2515_OK)
       err++;
-    if (LS_CAN_CS.init_Filt(2, 1,     CEML_ID) != MCP2515_OK)
+    if (LS_CAN_CS.init_Filt(2, EXT,         0x00) != MCP2515_OK)
+      err++;
+    if (LS_CAN_CS.init_Filt(3, EXT,         0x00) != MCP2515_OK)
+      err++;
+    if (LS_CAN_CS.init_Filt(4, EXT,         0x00) != MCP2515_OK)
+      err++;
+    if (LS_CAN_CS.init_Filt(5, EXT,         0x00) != MCP2515_OK)
       err++;
     if (err)
       ls_can_ok = false;
@@ -116,6 +126,7 @@ boolean SetupLSCAN()
     Serial.println("LS-CAN shield initialized failed!");
     return false;
   }
+  LS_CAN_CS.setSleepWakeup(1);
   Serial.println("LS-CAN shield initialized successfully!");
   return true;
 }
@@ -140,15 +151,21 @@ boolean SetupHSCAN()
   if (hs_can_ok)
   {
     uint8_t err = 0;
-    if (HS_CAN_CS.init_Mask(0, 1, HS_CAN_MASK) != MCP2515_OK)
+    if (HS_CAN_CS.init_Mask(0, EXT, HS_CAN_MASK1) != MCP2515_OK)
       err++;
-    if (HS_CAN_CS.init_Mask(1, 1, HS_CAN_MASK) != MCP2515_OK)
+    if (HS_CAN_CS.init_Mask(1, EXT, HS_CAN_MASK2) != MCP2515_OK)
       err++;
-    if (HS_CAN_CS.init_Filt(0, 1,      TCM_ID) != MCP2515_OK)
+    if (HS_CAN_CS.init_Filt(0, EXT,       TCM_ID) != MCP2515_OK)
       err++;
-    if (HS_CAN_CS.init_Filt(1, 1,      DEM_ID) != MCP2515_OK)
+    if (HS_CAN_CS.init_Filt(1, EXT,       DEM_ID) != MCP2515_OK)
       err++;
-    if (HS_CAN_CS.init_Filt(2, 1,      ECM_ID) != MCP2515_OK)
+    if (HS_CAN_CS.init_Filt(2, EXT,       ECM_ID) != MCP2515_OK)
+      err++;
+    if (HS_CAN_CS.init_Filt(3, EXT,         0x00) != MCP2515_OK)
+      err++;
+    if (HS_CAN_CS.init_Filt(4, EXT,         0x00) != MCP2515_OK)
+      err++;
+    if (HS_CAN_CS.init_Filt(5, EXT,         0x00) != MCP2515_OK)
       err++;
     if (err)
       hs_can_ok = false;
@@ -158,6 +175,7 @@ boolean SetupHSCAN()
     Serial.println("HS-CAN shield initialized failed!");
     return false;
   }
+  HS_CAN_CS.setSleepWakeup(1);
   Serial.println("HS-CAN shield initialized successfully!");
   return true;
 }
@@ -177,25 +195,25 @@ void HardFault()
 
 void EnaSCR()
 {
-  LS_CAN_CS.sendMsgBuf(SCR_ID, 1, 8, ena1SCR);
+  LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, ena1SCR);
   delay(DELAY_MS);
-  LS_CAN_CS.sendMsgBuf(SCR_ID, 1, 8, ena2SCR);
+  LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, ena2SCR);
   delay(DELAY_MS);
   Serial.println("Screen is turned on!");
 }
 
 void DisSCR()
 {
-  LS_CAN_CS.sendMsgBuf(SCR_ID, 1, 8, clrSCR);
+  LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, clrSCR);
   delay(DELAY_MS);
-  LS_CAN_CS.sendMsgBuf(SCR_ID, 1, 8, disSCR);
+  LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, disSCR);
   delay(DELAY_MS);
   Serial.println("Screen is turned off!");
 }
 
 void ClrSCR()
 {
-  LS_CAN_CS.sendMsgBuf(SCR_ID, 1, 8, clrSCR);
+  LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, clrSCR);
   delay(DELAY_MS);
   Serial.println("Screen is clear!");
 }
@@ -213,19 +231,19 @@ void PrnSCR(String string)
   string.toCharArray(message, 33);
   memcpy(ltr, message, 32);                                                           // moving message to ltr array
   uint8_t Msg_1[8] = {0xa7,   0x00,  ltr[0],  ltr[1],  ltr[2],  ltr[3],  ltr[4],  ltr[5]}; 
-  LS_CAN_CS.sendMsgBuf(PHM_ID, 1, 8, Msg_1);
+  LS_CAN_CS.sendMsgBuf(PHM_ID, EXT, LEN, Msg_1);
   delay(DELAY_MS);
   uint8_t Msg_2[8] = {0x21, ltr[6],  ltr[7],  ltr[8],  ltr[9],  ltr[10], ltr[11], ltr[12]}; 
-  LS_CAN_CS.sendMsgBuf(PHM_ID, 1, 8, Msg_2);
+  LS_CAN_CS.sendMsgBuf(PHM_ID, EXT, LEN, Msg_2);
   delay(DELAY_MS);
   uint8_t Msg_3[8] = {0x22, ltr[13], ltr[14], ltr[15], ltr[16], ltr[17], ltr[18], ltr[19]}; 
-  LS_CAN_CS.sendMsgBuf(PHM_ID, 1, 8, Msg_3);
+  LS_CAN_CS.sendMsgBuf(PHM_ID, EXT, LEN, Msg_3);
   delay(DELAY_MS);
   uint8_t Msg_4[8] = {0x23, ltr[20], ltr[21], ltr[22], ltr[23], ltr[24], ltr[25], ltr[26]}; 
-  LS_CAN_CS.sendMsgBuf(PHM_ID, 1, 8, Msg_4);
+  LS_CAN_CS.sendMsgBuf(PHM_ID, EXT, LEN, Msg_4);
   delay(DELAY_MS);
-  uint8_t Msg_5[8] = {0x65, ltr[27], ltr[28], ltr[29], ltr[30], ltr[31],   0x00,    0x00}; 
-  LS_CAN_CS.sendMsgBuf(PHM_ID, 1, 8, Msg_5);
+  uint8_t Msg_5[8] = {0x65, ltr[27], ltr[28], ltr[29], ltr[30], ltr[31],    0x00,    0x00}; 
+  LS_CAN_CS.sendMsgBuf(PHM_ID, EXT, LEN, Msg_5);
   delay(DELAY_MS);
 }
 
@@ -242,10 +260,10 @@ void setup()
 
 void ActSWM (uint8_t *buf)
 {
-  if (buf[7] == 0xbf)                                                                 // when 'RESET' button on SWM is pressed
+  if (buf[7] == 0xbf)                                                                 // when 'INFO/RESET' button on SWM is pressed
   {
     actScreen++;                                                                      // increasing index of information screen
-    readit = false;
+    readit = false;                                                                   // reset read it status
     progCycle = PAUSE;
     Serial.println("Pressed 'RESET' key on SWM");
   } 
@@ -279,9 +297,9 @@ void loop()
     {
       case 1:
         Serial.println("Case 1: enable screen + greating");
-        EnaSCR();
-        ClrSCR();
-        PrnSCR("*   VOLVO P2   **   INFORMER   *");
+        EnaSCR();                                                                     // enable screen
+        ClrSCR();                                                                     // clear  screen
+        PrnSCR("*   VOLVO P2   **   INFORMER   *");                                   // print on screen
         progCycle = 0;
         break;
 
@@ -341,11 +359,12 @@ void loop()
           while (HS_CAN_CS.checkReceive() == CAN_MSGAVAIL)                            // check if data is coming on shield
           {
             HS_CAN_CS.readMsgBuf(&hsCANrxId, &hsCANext, &hsCANrxLen, hsCANrxBuf);     // reading incoming packet on HS-CAN
+            //Serial.println(hsCANrxId, HEX);
             if (hsCANrxId == ECM_ID)                                                  // comparing packet ID
             {
               Serial.print("Found required ID: ");
               Serial.println(hsCANrxId, HEX);
-              PrnSCR(String((256 * hsCANrxBuf[5] + hsCANrxBuf[6])/4) + "RPM ENGINE"); // print ECM boost pressure
+              PrnSCR(String((256L * hsCANrxBuf[5] + hsCANrxBuf[6])/4) + "RPM ENGINE"); // print ECM boost pressure
               readit = true;
               break;
             }
