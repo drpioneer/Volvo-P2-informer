@@ -15,31 +15,19 @@
 
 Список использованной литературы:
 
-https://hackingvolvo.blogspot.com/
-
-https://hackingvolvoxc90.blogspot.com/
-
-https://www.drive2.com/l/523338948592799298/
-
-https://www.drive2.com/l/634000945637755124/
-
-https://www.drive2.com/l/712830156913249071/
-
-https://www.drive2.ru/l/9824565/
-
-https://www.drive2.ru/l/9878147/
-
-https://www.drive2.ru/l/10311961/
-
-https://www.drive2.ru/l/458462539873794364/
-
-https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
-
-https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
-
-https://github.com/vtl/volvo-ddd
-
-https://github.com/vtl/volvo-kenwood
+1. https://hackingvolvo.blogspot.com/
+2. https://hackingvolvoxc90.blogspot.com/
+3. https://www.drive2.com/l/9824565/
+4. https://www.drive2.com/l/9878147/
+5. https://www.drive2.com/l/458462539873794364/
+6. https://www.drive2.com/l/634000945637755124/
+7. https://github.com/vtl/volvo-ddd
+8. https://github.com/vtl/volvo-kenwood
+9. https://www.drive2.com/l/712830156913249071/
+10. https://www.drive2.com/l/717368116278996470/
+11. https://www.drive2.com/l/523338948592799298/
+12. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
+13. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
 
 Используете код или понравилось решение - отметьте это звездочкой, Вам не сложно, а мне приятно!
