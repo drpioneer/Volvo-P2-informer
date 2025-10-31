@@ -45,6 +45,12 @@ MCP_CAN       HS_CAN_CS   (10);                                                 
 #define    LS_CAN_MASK2   (MSK_ID | CCM_ID | REM_ID)                                  // mask2 to reduce load of Arduino when listening of LS-CAN
 #define    HS_CAN_MASK1   (MSK_ID | TCM_ID | ECM_ID)                                  // mask1 to reduce load of Arduino when listening of HS-CAN
 #define    HS_CAN_MASK2   (MSK_ID | DEM_ID | CEH_ID)                                  // mask2 to reduce load of Arduino when listening of HS-CAN
+//#define   SCR_ENABLE1   {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05}            // command_1 to turn on screen, 2000-2001
+//#define   SCR_ENABLE2   {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}            // command_2 to turn on screen, 2000-2001
+#define     SCR_ENABLE1   {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x35}            // command_1 to turn on screen, 2005+ or 2003-2004
+#define     SCR_ENABLE2   {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x31}            // command_2 to turn on screen, 2005+ or 2003-2004
+#define     SCR_DISABLE   {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04}            // command to turn off screen
+#define       SCR_CLEAR   {0xe1, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}            // command to clear screen
 
 #define             EXT   1                                                           // CAN packet parameter: EXTENDED
 #define             LEN   8                                                           // CAN packet parameter: LENGTH
@@ -72,37 +78,37 @@ struct request_t {
 //       |                                    calculated value = ((rxBuf[a] * 2^b + rxBuf[c] / 2^d) / 2^e - f)       |
 // ------------------------------------------------------------------------------------------------------------------|
 // --- AW55-51 ------------------------------------------------------------------------------------------------------|
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ATF TEMP"        }, // TCM temperature ATF              =  byte[6] * 256 + byte[7]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x06, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S1 SOLENOID"     }, // TCM S1 solenoid status           =  byte[4]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x07, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S2 SOLENOID"     }, // TCM S2 solenoid status           =  byte[4]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x20, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S3 SOLENOID"     }, // TCM S3 solenoid status           =  byte[4]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x21, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S4 SOLENOID"     }, // TCM S4 solenoid status           =  byte[4]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x22, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S5 SOLENOID"     }, // TCM S5 solenoid status           =  byte[4]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0xb2, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "SLT CURR"        }, // TCM SLT solenoid current         =  byte[4] * 256 + byte[5]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0xb3, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "SLS CURR"        }, // TCM SLS solenoid current         =  byte[4] * 256 + byte[5]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0xb4, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "SLU CURR"        }, // TCM SLU solenoid current         =  byte[4] * 256 + byte[5]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x01, 0x01, 0x00, 0x00, 0x00}, {0x05, 0x0e, 0x06, 0x00, 0x0e, 0x00}, "GEARBOX POS"     }, // TCM gearbox position             =  byte[5] & 0x3
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x93, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "RATIO X1000"     }, // TCM gear ratio                   = (byte[4] * 256 + byte[5]) * 0.001
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x15, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ENG TORQUE"      }, // TCM engine torque                =  byte[6] * 256 + bytes[7]
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x15, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "TORQUE REDUC"    }, // TCM torque reduction             =  byte[4] * 256 + bytes[5]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ATF TEMP"        }, // TCM_temperature ATF              =  byte[6] * 256 + byte[7]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x06, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "S1 SOLENOID"     }, // TCM_S1 solenoid status           =  byte[4]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x07, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "S2 SOLENOID"     }, // TCM_S2 solenoid status           =  byte[4]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x20, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "S3 SOLENOID"     }, // TCM_S3 solenoid status           =  byte[4]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x21, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "S4 SOLENOID"     }, // TCM_S4 solenoid status           =  byte[4]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x22, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "S5 SOLENOID"     }, // TCM_S5 solenoid status           =  byte[4]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0xb2, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "SLT CURR"        }, // TCM_SLT solenoid current         =  byte[4] * 256 + byte[5]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0xb3, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "SLS CURR"        }, // TCM_SLS solenoid current         =  byte[4] * 256 + byte[5]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0xb4, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "SLU CURR"        }, // TCM_SLU solenoid current         =  byte[4] * 256 + byte[5]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x01, 0x01, 0x00, 0x00, 0x00}, {0x05, 0x0e, 0x06, 0x08, 0x0e, 0x00}, "GEARBOX POS"     }, // TCM_gearbox position             =  byte[5] & 0x3
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x93, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x0a, 0x00}, "GEAR RATIO"      }, // TCM gear ratio                   = (byte[4] * 256 + byte[5]) * 0.001
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x15, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ENG TORQUE"      }, // TCM_engine torque                =  byte[6] * 256 + bytes[7]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x15, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x08, 0x05, 0x00, 0x00, 0x00}, "TORQUE REDUC"    }, // TCM_torque reduction             =  byte[4] * 256 + bytes[5]
 // --- B5254T2 ------------------------------------------------------------------------------------------------------|
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xb8, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x05, 0x01, 0x00, 0x30}, "COOLANT TMP"     }, // ECM coolant temperature          =  byte[5] * 0.75 - 48
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x05, 0x01, 0x00, 0x00}, {0x05, 0x02, 0x05, 0x00, 0x00, 0x00}, "ATM PRESS"       }, // ECM atmospheric pressure         =  byte[5] * 5
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xef, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x05, 0x00}, "BOOST PRESS"     }, // ECM boost pressure               = (byte[5] * 256  + byte[6]) / 25.6
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xaf, 0x01, 0x00, 0x00}, {0x05, 0x01, 0x05, 0x00, 0x02, 0x30}, "INT AIR TMP"     }, // ECM intake air temperature       =  byte[5] * 0.75 - 48
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xb8, 0x01, 0x00, 0x00}, {0x05, 0x01, 0x05, 0x00, 0x02, 0x30}, "COOLANT TMP"     }, // ECM_coolant temperature          =  byte[5] * 0.75 - 48
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x05, 0x01, 0x00, 0x00}, {0x05, 0x02, 0x05, 0x00, 0x00, 0x00}, "ATM PRESS"       }, // ECM_atmospheric pressure         =  byte[5] * 5
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xef, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x08, 0x00}, "BOOST PRESS /10" }, // ECM boost pressure               = (byte[5] * 256  + byte[6]) / 25.6
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xaf, 0x01, 0x00, 0x00}, {0x05, 0x01, 0x05, 0x00, 0x02, 0x30}, "INT AIR TMP"     }, // ECM_intake air temperature       =  byte[5] * 0.75 - 48
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x01, 0x01, 0x00, 0x00}, {0x05, 0x04, 0x04, 0x00, 0x00, 0xb0}, "AC PRESS"        }, // ECM A/C pressure                 =  byte[5] * 13.54 - 176
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x0f, 0x04, 0x00, 0x0f, 0xb0}, "AC COMPRESS ACT" }, // ECM A/C compressor activ         =  byte[5] & 1
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x93, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x02, 0x00}, "ENGINE RPM"      }, // ECM engine speed                 = (byte[5] * 256  + byte[6]) / 4
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x0f, 0x04, 0x00, 0x0f, 0x00}, "AC COMPRESS ACT" }, // ECM_A/C compressor activ         =  byte[5] & 1
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x93, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x02, 0x00}, "ENGINE RPM"      }, // ECM_engine speed                 = (byte[5] * 256  + byte[6]) / 4
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x51, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "SHORT TERM FC"   }, // ECM short-term fuel correction   =((byte[5] * 256  + byte[6]) * 2.0) / 65535
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x4c, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x04, 0x00}, "LONG TERM FC L"  }, // ECM long-term fuel corr low      = (byte[5] + byte[6]) * 0.046875
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x4e, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "LONG TERM FC M"  }, // ECM long-term fuel corr medium   = (byte[5] + byte[6]) * 0.00003052
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x50, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "LONG TERM FC H"  }, // ECM long-term fuel corr high     = (byte[5] + byte[6]) * 0.00003052
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x12, 0x48, 0x01, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "ENG FAN X100"    }, // ECM Engine fan duty              =  byte[5] * 100 / 255
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xad, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x00, 0x00}, "MISFIRES CNT"    }, // ECM ignition misfires number     =  byte[5] * 256 + byte[6]
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x12, 0x48, 0x01, 0x00, 0x00}, {0x05, 0x10, 0x05, 0x00, 0x08, 0x00}, "ENG FAN X100"    }, // ECM_Engine fan duty              =  byte[5] * 100 / 255
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xad, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x00, 0x00}, "MISFIRES CNT"    }, // ECM_ignition misfires number     =  byte[5] * 256 + byte[6]
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x15, 0x7d, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x04, 0x45}, "FUEL PRESS"      }, // ECM fuel pressure                = (byte[5] * 256 + byte[6]) * 0.0724792480 - 69
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x15, 0x83, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x09, 0x00}, "FUEL PUM DUT"    }, // ECM fuel pump duty               = (byte[5] * 256 + byte[6]) * 0.0015287890625
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x2d, 0x01, 0x00, 0x00}, {0x05, 0x07, 0x05, 0x00, 0x08, 0x00}, "TCV DUT"         }, // ECM TCV duty                     =  byte[5] * 191.25 / 255
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x4e, 0x01, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "ANGL THROT X100" }, // ECM throttle angle               =  byte[5] * 100 / 255
+  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x4e, 0x01, 0x00, 0x00}, {0x05, 0x10, 0x05, 0x00, 0x08, 0x00}, "ANGL THROT X100" }, // ECM throttle angle               =  byte[5] * 100 / 255
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x9a, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x00, 0x00}, "MAF X10"         }, // ECM air flow meter               = (byte[5] * 256 + byte[6]) * 0.1
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x13, 0x63, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x08, 0x00}, "ANGLE VVT IN"    }, // ECM VVT inlet angle              = (byte[5] * 256 + byte[6]) * 0.0390625
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x13, 0x62, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x08, 0x00}, "ANGLE VVT EXT"   }, // ECM VVT exhaust angle            = (byte[5] * 256 + byte[6]) * 0.0390625
@@ -111,13 +117,13 @@ struct request_t {
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x00, 0x00}, "PUMP CURR"       }, // DEM pump current                 =  byte[5] * 256 + byte[6]
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00}, {0x07, 0x08, 0x01, 0x00, 0x00, 0x00}, "SOLENOID CURR"   }, // DEM solenoid current             =  byte[7] * 256 + byte[8]
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x03, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x05, 0x06, 0x00, 0x00}, "OIL PRESS"       }, // DEM oil pressure                 =  byte[5] * 0.0164
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x04, 0x00, 0x00, 0x00}, "OIL TMP"         }, // DEM oil temperature              = (signed char)byte[5]
+  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x10, 0x05, 0x00, 0x00, 0x00}, "OIL TMP"         }, // DEM oil temperature              = (signed char)byte[5]
 //{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x00, 0x00, 0x01, 0x00, 0x06, 0x00}, "FL SPEED"        }, // DEM FL velocity                  = (byte[8] * 256 + bytes[9]) * 0.0156
 //{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x07, 0x00, 0x06, 0x00}, "FR SPEED"        }, // DEM FR velocity                  = (byte[6] * 256 + bytes[7]) * 0.0156
 //{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x06, 0x00}, "RL SPEED"        }, // DEM RL velocity                  = (byte[12] * 256 + bytes[13]) * 0.0156
 //{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x02, 0x00, 0x03, 0x00, 0x06, 0x00}, "RR SPEED"        }, // DEM RR velocity                  = (byte[10] * 256 + bytes[11]) * 0.0156
 // --- Rear unit ----------------------------------------------------------------------------------------------------|
-  {REM_ID, {0xcd, 0x46, 0xa6, 0xd0, 0xd4, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x06, 0x00, 0x03, 0x00}, "BATT VOLTAGE"    }, // REM battery voltage              =  byte[5] / 8
+  {REM_ID, {0xcd, 0x46, 0xa6, 0xd0, 0xd4, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x05, 0x10, 0x03, 0x00}, "BATT VOLTAGE"    }, // REM battery voltage              =  byte[5] / 8
 // --- Climate unit -------------------------------------------------------------------------------------------------|
   {CCM_ID, {0xcd, 0x29, 0xa6, 0x00, 0x01, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x06, 0x64}, "EVAPORAT TMP"    }, // CCM evaporator temperature       =  byte[5] * 256 + byte[6]) * 0.015625 - 100
   {CCM_ID, {0xcd, 0x29, 0xa6, 0x00, 0xa1, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x06, 0x64}, "CABIN TMP"       }, // CCM cabin temperature            =  byte[5] * 256 + byte[6]) * 0.015625 - 100
@@ -140,8 +146,7 @@ uint8_t          cmd[8] = {0};                                                  
 uint8_t         form[6] = {0};                                                        // parameters to process in formula
 char           text[16] = {0};                                                        // text message
 uint32_t     LONG_PRESS = 1000;                                                       // long press duration
-uint32_t     pressStart = 0;                                                          // button press time
-boolean       isPressed = false;                                                      // button current status
+
 boolean          readIt = false;                                                      // request response status
 boolean       screenEna = true;
 
@@ -181,12 +186,12 @@ boolean SetupHSCAN() {
   pinMode(HS_CAN_INT, INPUT_PULLUP);                                                  // set up INT Pin for HS-CAN
   if (HS_CAN_CS.begin(MCP_ANY, HS_CAN_SPD, HS_CAN_QRZ) == CAN_OK)                     // init HS-CAN bus
     if (HS_CAN_CS.init_Mask(0, EXT, MSK_ID & HS_CAN_MASK1) == MCP2515_OK)             // config HS-CAN masks and filters
-      if (HS_CAN_CS.init_Mask(1, EXT, MSK_ID & HS_CAN_MASK2) == MCP2515_OK) 
-        if (HS_CAN_CS.init_Filt(0, EXT, MSK_ID &       TCM_ID) == MCP2515_OK) 
-          if (HS_CAN_CS.init_Filt(1, EXT, MSK_ID &       ECM_ID) == MCP2515_OK) 
-            if (HS_CAN_CS.init_Filt(2, EXT, MSK_ID &       DEM_ID) == MCP2515_OK) 
-              if (HS_CAN_CS.init_Filt(3, EXT, MSK_ID &       CEH_ID) == MCP2515_OK) 
-                if (HS_CAN_CS.init_Filt(4, EXT, MSK_ID &       NON_ID) == MCP2515_OK) 
+      if (HS_CAN_CS.init_Mask(1, EXT, MSK_ID & HS_CAN_MASK2) == MCP2515_OK)
+        if (HS_CAN_CS.init_Filt(0, EXT, MSK_ID &       TCM_ID) == MCP2515_OK)
+          if (HS_CAN_CS.init_Filt(1, EXT, MSK_ID &       ECM_ID) == MCP2515_OK)
+            if (HS_CAN_CS.init_Filt(2, EXT, MSK_ID &       DEM_ID) == MCP2515_OK)
+              if (HS_CAN_CS.init_Filt(3, EXT, MSK_ID &       CEH_ID) == MCP2515_OK)
+                if (HS_CAN_CS.init_Filt(4, EXT, MSK_ID &       NON_ID) == MCP2515_OK)
                   if (HS_CAN_CS.init_Filt(5, EXT, MSK_ID &       NON_ID) == MCP2515_OK) {
                     HS_CAN_CS.setSleepWakeup(1);
                     HS_CAN_CS.setMode(MCP_NORMAL);                                    // set up HS-CAN in normal mode
@@ -219,14 +224,7 @@ void HardFault() {
  * @retval  none
  */
 void EnableScreen() {
-  //uint8_t DIM_screen_enable[2][8] = {                                               // command to turn on screen, 2000-2001
-  //  {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05},
-  //  {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-  //};
-  uint8_t DIM_screen_enable[2][8] = {                                                 // command to turn on screen, 2005+ or 2003-2004
-    {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x35},
-    {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x31},
-  };
+  uint8_t DIM_screen_enable[2][8] = {SCR_ENABLE1, SCR_ENABLE2,};                      // command to turn on screen
   for (uint8_t i = 0; i < 2; i++) {
     LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, DIM_screen_enable[i]);
     delay(MS);
@@ -239,7 +237,7 @@ void EnableScreen() {
  * @retval  none
  */
 void DisableScreen() {
-  uint8_t DIM_screen_disable[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04};   // command to turn off screen
+  uint8_t DIM_screen_disable[8] = SCR_DISABLE;                                        // command to turn off screen
   LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, DIM_screen_disable);
   delay(MS);
 }
@@ -250,48 +248,24 @@ void DisableScreen() {
  * @retval  none
  */
 void ClearScreen() {
-  uint8_t DIM_screen_clear[8] = {0xe1, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};     // command to clear screen
+  uint8_t DIM_screen_clear[8] = SCR_CLEAR;                                            // command to clear screen
   LS_CAN_CS.sendMsgBuf(SCR_ID, EXT, LEN, DIM_screen_clear);
   delay(MS);
 }
 
 /**
  * @brief   Output message
+ * @param   outVal - boolean output value print
  * @param   value - numeric value (may be negative)
  * @param   label - text label
  * @retval  none
  */
-void PrintScreen(int16_t value, const char* label) {
-  static char buffer[33];                                                           // 32 symbols + '\0'
-  int len = len = snprintf(buffer, sizeof(buffer), "%s %d", label, value);          // forming a string
+void PrintScreen(boolean outVal, int16_t value, const char* label) {
+  static char buffer[33];                                                             // 32 symbols + '\0'
+  uint8_t len = snprintf(buffer, sizeof(buffer), "%s", label);                        // forming a string without value
+  if (outVal)  len = snprintf(buffer, sizeof(buffer), "%s %d", label, value);         // forming a string with value
   if (len < (sizeof (buffer) - 1)) {
-    for (int i = len; i < (sizeof (buffer) - 1); i++)  buffer[i] = ' ';             // filling voids via spaces
-  buffer[(sizeof (buffer) - 1)] = '\0';
-  };
-  uint8_t msg[5][8] = {
-    {0xa7,       0x00, buffer[ 0], buffer[ 1], buffer[ 2], buffer[ 3], buffer[ 4], buffer[ 5]},
-    {0x21, buffer[ 6], buffer[ 7], buffer[ 8], buffer[ 9], buffer[10], buffer[11], buffer[12]},
-    {0x22, buffer[13], buffer[14], buffer[15], buffer[16], buffer[17], buffer[18], buffer[19]},
-    {0x23, buffer[20], buffer[21], buffer[22], buffer[23], buffer[24], buffer[25], buffer[26]},
-    {0x65, buffer[27], buffer[28], buffer[29], buffer[30], buffer[31],       0x00,       0x00},
-  };
-  Serial.println(buffer);
-  for (uint8_t i = 0; i < (sizeof(msg) >> 3); i++) {
-    LS_CAN_CS.sendMsgBuf(PHM_ID, EXT, LEN, msg[i]);
-    delay(MS);
-  };
-}
-
-/**
- * @brief   Output message
- * @param   label - text label
- * @retval  none
- */
-void PrintScreen(const char* label) {
-  static char buffer[33];                                                           // 32 symbols + '\0'
-  int len = len = snprintf(buffer, sizeof(buffer), "%s", label);                    // forming a string
-  if (len < (sizeof (buffer) - 1)) {
-    for (int i = len; i < (sizeof (buffer) - 1); i++)  buffer[i] = ' ';             // filling voids via spaces
+    for (int i = len; i < (sizeof (buffer) - 1); i++)  buffer[i] = ' ';               // filling voids via spaces
   buffer[(sizeof (buffer) - 1)] = '\0';
   };
   uint8_t msg[5][8] = {
@@ -321,7 +295,7 @@ void setup()
   Serial.println(SCREENS, DEC);
   EnableScreen();                                                                     // screen turn on
   ClearScreen();
-  PrintScreen("*   VOLVO P2   **   INFORMER   *");
+  PrintScreen(false, 0, "*   VOLVO P2   **   INFORMER   *");
   delay(1000);
 }
 
@@ -331,6 +305,8 @@ void setup()
  * @retval  none
  */
 void HandlerSWM(uint8_t *buf) {
+  static uint32_t pressStart = 0;                                                     // button press time
+  static boolean   isPressed = false;                                                 // button current status
   if (buf[BYTE_INFO_BUT] == INFO_BUT) {                                               // when 'INFO/RESET' button on SWM is pressed
     if (!isPressed) {
       isPressed = true;
@@ -362,17 +338,6 @@ void HandlerSWM(uint8_t *buf) {
 }
 
 /**
- * @brief   CEM-L handler
- * @param   buf
- * @retval  none
- */
-void HandlerCEL(uint8_t *buf) {
-  Serial.print("Ambient light: ");
-  uint8_t val = buf[4] & 0xf;
-  Serial.println(val, DEC);
-}
-
-/**
  * @brief   LS-CAN packet reader
  * @param   none
  * @retval  none
@@ -387,7 +352,6 @@ void ReadLSCAN()
         break;
 
       case CEL_ID:
-        //HandlerCEL (CANrxBuf);
         break;
 
       default:
@@ -412,12 +376,12 @@ uint8_t PurposeCAN(uint32_t id) {
 }
 
 void loop() {
+  //static uint32_t loopStart = millis();
   ReadLSCAN();                                                                        // listening LS-CAN for button pressing
   progCycle++;                                                                        // increasing delay counter before a new parameter request in CAN
   if (actScreen >= SCREENS) actScreen = 0;
   if (progCycle >  PAUSE)   progCycle = 0;
-  if (progCycle == PAUSE) {                                                           // every 50 000 cycles (conditional 1 seс)
-
+  if (progCycle == PAUSE)   {                                                         // every 50 000 cycles (conditional 1 seс)
     id = pgm_read_dword(&req[actScreen].id);                                          // buffer filling with current id
     for (uint8_t i = 0; i < 8; i++)
       cmd[i] = pgm_read_byte(&req[actScreen].cmd[i]);                                 // buffer filling with current command
@@ -436,10 +400,10 @@ void loop() {
           if (screenEna) {
             EnableScreen();                                                           // screen turn on
             ClearScreen();
-            PrintScreen(text);
+            PrintScreen(false, 0, text);
             } else {
               DisableScreen();                                                        // screen turn off
-              delay (1000);
+              delay (500);
             };
           };
 
@@ -454,7 +418,7 @@ void loop() {
                 Serial.print("Found in HS-CAN required ID: ");
                 Serial.println(CANrxId, HEX);
                 int16_t val = ((((uint16_t)CANrxBuf[form[0]] << form[1]) + (CANrxBuf[form[2]] >> form[3])) >> form[4]) - form[5];
-                PrintScreen(val, text);                                             // print 'value + text'
+                PrintScreen(true, val, text);                                       // print 'value + text'
                 readIt = true;                                                      // request response status
                 break;
               }; // if (CANrxId...
@@ -473,7 +437,7 @@ void loop() {
                 Serial.print("Found in LS-CAN required ID: ");
                 Serial.println(CANrxId, HEX);
                 int16_t val = ((((uint16_t)CANrxBuf[form[0]] << form[1]) + (CANrxBuf[form[2]] >> form[3])) >> form[4]) - form[5];
-                PrintScreen(val, text);                                             // print 'value + text'
+                PrintScreen(true, val, text);                                       // print 'value + text'
                 readIt = true;                                                      // request response status
                 break;
               }; // if (CANrxId...
