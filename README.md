@@ -13,7 +13,7 @@
 
 ![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
-Покупные компоненты проекта:
+Покупные компоненты:
 
 - https://aliexpress.ru/item/1005009497676801.html - 2шт
 - https://aliexpress.ru/item/32915861640.html - 1шт
