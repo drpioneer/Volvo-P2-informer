@@ -49,9 +49,8 @@ MCP_CAN       HS_CAN_CS   (10);                                                 
 #define             EXT   1                                                           // CAN packet parameter: EXTENDED
 #define             LEN   8                                                           // CAN packet parameter: LENGTH
 #define              MS   30                                                          // delay (in miliseconds)
-#define            WAIT   20                                                          // response waiting time
+#define            WAIT   50                                                          // response waiting time
 #define           PAUSE   50000                                                       // pause (in cycles)
-//#define        REQUESTS   5                                                           // count of repeated requests via CAN bus
 //#define      INFO_BUT   0xc0                                                        // button 'INFO' code (2000-2001)
 #define        INFO_BUT   0xbf                                                        // button 'INFO' code (2005+)
 //#define BYTE_INFO_BUT   0x04                                                        // button 'INFO' byte (2000-2001)
@@ -73,7 +72,7 @@ struct request_t {
 //       |                                    calculated value = ((rxBuf[a] * 2^b + rxBuf[c] / 2^d) / 2^e - f)       |
 // ------------------------------------------------------------------------------------------------------------------|
 // --- AW55-51 ------------------------------------------------------------------------------------------------------|
-  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ATF TMP"         }, // TCM temperature ATF              =  byte[6] * 256 + byte[7]
+  {TCM_ID, {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ATF TEMP"        }, // TCM temperature ATF              =  byte[6] * 256 + byte[7]
   {TCM_ID, {0xcc, 0x6e, 0xa5, 0x06, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S1 SOLENOID"     }, // TCM S1 solenoid status           =  byte[4]
   {TCM_ID, {0xcc, 0x6e, 0xa5, 0x07, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S2 SOLENOID"     }, // TCM S2 solenoid status           =  byte[4]
   {TCM_ID, {0xcc, 0x6e, 0xa5, 0x20, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x00, 0x00}, "S3 SOLENOID"     }, // TCM S3 solenoid status           =  byte[4]
@@ -110,9 +109,13 @@ struct request_t {
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x2c, 0x01, 0x00, 0x00}, {0x05, 0x07, 0x05, 0x00, 0x08, 0x00}, "BTDC"            }, // ECM BTDC                         = (byte[5] * 191.25 / 255
 // --- Haldex -------------------------------------------------------------------------------------------------------|
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x00, 0x00}, "PUMP CURR"       }, // DEM pump current                 =  byte[5] * 256 + byte[6]
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00}, {0x07, 0x08, 0x08, 0x00, 0x00, 0x00}, "SOLENOID CURR"   }, // DEM solenoid current             =  byte[7] * 256 + byte[8]
+  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00}, {0x07, 0x08, 0x01, 0x00, 0x00, 0x00}, "SOLENOID CURR"   }, // DEM solenoid current             =  byte[7] * 256 + byte[8]
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x03, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x05, 0x06, 0x00, 0x00}, "OIL PRESS"       }, // DEM oil pressure                 =  byte[5] * 0.0164
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x04, 0x00, 0x00, 0x00}, "OIL TMP"         }, // DEM oil temperature              =  (signed char)byte[5]
+  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x04, 0x00, 0x00, 0x00}, "OIL TMP"         }, // DEM oil temperature              = (signed char)byte[5]
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x00, 0x00, 0x01, 0x00, 0x06, 0x00}, "FL SPEED"        }, // DEM FL velocity                  = (byte[8] * 256 + bytes[9]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x07, 0x00, 0x06, 0x00}, "FR SPEED"        }, // DEM FR velocity                  = (byte[6] * 256 + bytes[7]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x00, 0x06, 0x00}, "RL SPEED"        }, // DEM RL velocity                  = (byte[12] * 256 + bytes[13]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x02, 0x00, 0x03, 0x00, 0x06, 0x00}, "RR SPEED"        }, // DEM RR velocity                  = (byte[10] * 256 + bytes[11]) * 0.0156
 // --- Rear unit ----------------------------------------------------------------------------------------------------|
   {REM_ID, {0xcd, 0x46, 0xa6, 0xd0, 0xd4, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x06, 0x00, 0x03, 0x00}, "BATT VOLTAGE"    }, // REM battery voltage              =  byte[5] / 8
 // --- Climate unit -------------------------------------------------------------------------------------------------|
@@ -324,7 +327,7 @@ void setup()
 
 /**
  * @brief   Button handler
- * @param   buf - CAN packet
+ * @param   buf - 
  * @retval  none
  */
 void HandlerSWM(uint8_t *buf) {
