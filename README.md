@@ -13,12 +13,12 @@
 
 ![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
-Компоненты проекта:
+Покупные компоненты проекта:
 
-1. https://aliexpress.ru/item/1005009497676801.html - 2шт
-2. https://aliexpress.ru/item/32915861640.html - 1шт
-3. https://aliexpress.ru/item/1005002538696313.html -1шт
-4. https://aliexpress.ru/item/1005007870477550.html - 1шт
+- https://aliexpress.ru/item/1005009497676801.html - 2шт
+- https://aliexpress.ru/item/32915861640.html - 1шт
+- https://aliexpress.ru/item/1005002538696313.html - 1шт
+- https://aliexpress.ru/item/1005007870477550.html - 1шт
 
 Список использованной литературы:
 
