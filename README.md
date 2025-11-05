@@ -36,8 +36,9 @@
 12. https://www.drive2.com/l/523338948592799298/
 13. https://github.com/olegel/VolvoCan
 14. https://github.com/olegel/CANLogger
-15. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
-16. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
+15. https://github.com/latonita/arduino-canbus-monitor
+16. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
+17. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
 
 Используете код или понравилось решение - отметьте это звездочкой, Вам не сложно, а мне приятно!
