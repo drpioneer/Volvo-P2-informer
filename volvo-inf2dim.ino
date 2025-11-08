@@ -158,7 +158,7 @@ boolean       screenEna = true;
 boolean SetupLSCAN() {
   Serial.println("LS-CAN driver initialize...");
   pinMode(LS_CAN_INT, INPUT_PULLUP);                                                  // set up INT Pin for LS-CAN
-  if (LS_CAN_CS.begin(MCP_ANY, LS_CAN_SPD, LS_CAN_QRZ) == CAN_OK)                     // init LS-CAN bus
+  if (LS_CAN_CS.begin(MCP_STDEXT, LS_CAN_SPD, LS_CAN_QRZ) == CAN_OK)                  // init LS-CAN bus
     if (LS_CAN_CS.init_Mask(0, EXT, MSK_ID & LS_CAN_MASK1) == MCP2515_OK)             // config LS-CAN masks and filters
       if (LS_CAN_CS.init_Mask(1, EXT, MSK_ID & LS_CAN_MASK2) == MCP2515_OK)
         if (LS_CAN_CS.init_Filt(0, EXT, MSK_ID &       SWM_ID) == MCP2515_OK)
@@ -184,7 +184,7 @@ boolean SetupLSCAN() {
 boolean SetupHSCAN() {
   Serial.println("HS-CAN BUS driver initialize...");
   pinMode(HS_CAN_INT, INPUT_PULLUP);                                                  // set up INT Pin for HS-CAN
-  if (HS_CAN_CS.begin(MCP_ANY, HS_CAN_SPD, HS_CAN_QRZ) == CAN_OK)                     // init HS-CAN bus
+  if (HS_CAN_CS.begin(MCP_STDEXT, HS_CAN_SPD, HS_CAN_QRZ) == CAN_OK)                  // init HS-CAN bus
     if (HS_CAN_CS.init_Mask(0, EXT, MSK_ID & HS_CAN_MASK1) == MCP2515_OK)             // config HS-CAN masks and filters
       if (HS_CAN_CS.init_Mask(1, EXT, MSK_ID & HS_CAN_MASK2) == MCP2515_OK)
         if (HS_CAN_CS.init_Filt(0, EXT, MSK_ID &       TCM_ID) == MCP2515_OK)
@@ -287,8 +287,7 @@ void PrintScreen(boolean outVal, int16_t value, const char* label) {
  * @param   none
  * @retval  none
  */
-void setup() 
-{
+void setup() {
   Serial.begin(115200);
   if (!SetupLSCAN() or !SetupHSCAN())   HardFault();
   Serial.print("Total active screens: ");
