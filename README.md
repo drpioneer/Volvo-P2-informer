@@ -17,6 +17,8 @@
 
 <img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
 
+<img src="https://github.com/user-attachments/assets/3238c791-a25b-4c7e-9276-64b939b83fe8" />
+
 Покупные компоненты:
 
 - https://aliexpress.ru/item/1005009497676801.html - 2шт
