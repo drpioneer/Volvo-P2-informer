@@ -15,7 +15,7 @@
 
 Рендер кросс-платы в сборе:
 
-<img width="476" height="372" alt="volvoP2inf" src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
+<img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
 
 Покупные компоненты:
 
