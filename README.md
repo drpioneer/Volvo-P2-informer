@@ -13,7 +13,7 @@
 
 ![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
-Рендер прдполагаемой кросс-платы в сборе:
+Рендер предполагаемой кросс-платы в сборе:
 
 <img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
 
