@@ -13,6 +13,10 @@
 
 ![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
+Рендер кросс-платы в сборе:
+
+<img width="476" height="372" alt="volvoP2inf" src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
+
 Покупные компоненты:
 
 - https://aliexpress.ru/item/1005009497676801.html - 2шт
@@ -40,5 +44,6 @@
 16. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
 17. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
+Зеркало на DRIVE2: https://www.drive2.ru/l/718050088366114704/
 
 Используете код или понравилось решение - отметьте это звездочкой, Вам не сложно, а мне приятно!
