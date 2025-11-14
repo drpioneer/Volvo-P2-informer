@@ -29,22 +29,23 @@
 Список использованной литературы:
 
 1. https://hackingvolvo.blogspot.com/
-2. https://hackingvolvoxc90.blogspot.com/
-3. https://www.drive2.com/l/9769115
-4. https://www.drive2.com/l/9824565/
-5. https://www.drive2.com/l/9878147/
-6. https://www.drive2.com/l/458462539873794364/
-7. https://www.drive2.com/l/634000945637755124/
-8. https://github.com/vtl/volvo-ddd
-9. https://github.com/vtl/volvo-kenwood
-10. https://www.drive2.com/l/712830156913249071/
-11. https://www.drive2.com/l/717368116278996470/
-12. https://www.drive2.com/l/523338948592799298/
-13. https://github.com/olegel/VolvoCan
-14. https://github.com/olegel/CANLogger
-15. https://github.com/latonita/arduino-canbus-monitor
-16. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
-17. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
+2. https://github.com/hackingvolvo
+3. https://hackingvolvoxc90.blogspot.com/
+4. https://www.drive2.com/l/9769115
+5. https://www.drive2.com/l/9824565/
+6. https://www.drive2.com/l/9878147/
+7. https://www.drive2.com/l/458462539873794364/
+8. https://www.drive2.com/l/634000945637755124/
+9. https://github.com/vtl/volvo-ddd
+10. https://github.com/vtl/volvo-kenwood
+11. https://www.drive2.com/l/712830156913249071/
+12. https://www.drive2.com/l/717368116278996470/
+13. https://www.drive2.com/l/523338948592799298/
+14. https://github.com/olegel/VolvoCan
+15. https://github.com/olegel/CANLogger
+16. https://github.com/latonita/arduino-canbus-monitor
+17. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
+18. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
 Зеркало на DRIVE2: https://www.drive2.ru/l/718050088366114704/
 
