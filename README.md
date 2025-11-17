@@ -26,6 +26,10 @@
 - https://aliexpress.ru/item/1005002538696313.html - 1шт
 - https://aliexpress.ru/item/1005007870477550.html - 1шт
 
+## Результат работы:
+
+![IMG_20251117_173650](https://github.com/user-attachments/assets/d68cac6f-8f70-4a17-8365-0c095f5f8ee4)
+
 ## Список использованной литературы:
 
 1. https://hackingvolvo.blogspot.com/
