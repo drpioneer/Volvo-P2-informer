@@ -12,7 +12,7 @@
 ## Схема электрических соединений:
 ![sch](https://github.com/user-attachments/assets/a9c4d5ac-88a2-4806-ad35-0f1725c3ff0b)
 
-## Взрыв-схема предполагаемой кросс-платы в сборе:
+## Взрыв-схема кросс-платы в сборе:
 <img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
 <img src="https://github.com/user-attachments/assets/3238c791-a25b-4c7e-9276-64b939b83fe8" />
 
