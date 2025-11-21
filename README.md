@@ -1,4 +1,4 @@
-# Reading & displaying parameters on the dashboard of the Volvo P2 * Чтение и вывод параметров на приборную панель Volvo P2
+# Reading & displaying parameters on the dashboard of the Volvo P2    Чтение и вывод параметров на приборную панель Volvo P2
 ![IMG_20251117_173650](https://github.com/user-attachments/assets/d68cac6f-8f70-4a17-8365-0c095f5f8ee4)
 
 Software and hardware solution based on ArduinoNano +2x MCP2515, connected to CAN buses (high-speed and low-speed) of Volvo passenger cars on the P2 platform (as part of: Volvo S80 1998-2006, Volvo S60 2000-2009, Volvo V70 2000-2007, Volvo XC70 2000-2007, Volvo XC90 2002-2014), which allows you to collect preset parameters from the vehicle's CAN buses and output them to the vehicle's standard dashboard (DIM module).
@@ -16,7 +16,7 @@ The device is controlled by the INFO/RESET button on the left steering lever. Bo
 ## Electrical connection diagram * Схема электрических соединений:
 ![sch](https://github.com/user-attachments/assets/a9c4d5ac-88a2-4806-ad35-0f1725c3ff0b)
 
-## Explosion-circuit diagram of the cross-board assembly / Взрыв-схема кросс-платы в сборе:
+## Explosion-circuit diagram of the cross-board assembly * Взрыв-схема кросс-платы в сборе:
 <img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
 <img src="https://github.com/user-attachments/assets/3238c791-a25b-4c7e-9276-64b939b83fe8" />
 
