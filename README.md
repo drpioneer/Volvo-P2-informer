@@ -44,7 +44,7 @@ The device is controlled by the INFO/RESET button on the left steering lever. Bo
 14. https://github.com/olegel/VolvoCan
 15. https://github.com/olegel/CANLogger
 16. https://github.com/latonita/arduino-canbus-monitor
-17. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html?ysclid=mg0iokknp5970394408
+17. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html
 18. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
 Mirror on DRIVE2 * Зеркало на DRIVE2: https://www.drive2.ru/l/718050088366114704/
