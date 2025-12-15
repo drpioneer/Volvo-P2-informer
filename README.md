@@ -15,7 +15,6 @@ The device is controlled by the INFO/RESET button on the left steering lever. Bo
 ![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
 ## Electrical connection diagram * Схема электрических соединений:
-@@![sch](https://github.com/user-attachments/assets/a9c4d5ac-88a2-4806-ad35-0f1725c3ff0b)
 ![sch](https://github.com/user-attachments/assets/737c2150-9948-446e-b447-fc642b59534f)
 
 ## Explosion-circuit diagram of the cross-board assembly * Взрыв-схема кросс-платы в сборе:
