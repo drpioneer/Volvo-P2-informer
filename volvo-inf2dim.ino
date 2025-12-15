@@ -389,7 +389,7 @@ void setup() {
 void HandlerSWM(uint8_t *buf) {
   static uint32_t pressStart = 0;                                                     // button press time
   static boolean   isPressed = false;                                                 // button current status
-  if (buf[BYTE_INFO_BUT] == INFO_BUT) {                                               // when 'INFO/RESET' button on SWM is pressed
+  if (buf[BYTE_INFO_BUT] == INFO_BUT) {                                               // when 'RESET' button on SWM is pressed
     if (!isPressed) {
       isPressed = true;
       pressStart = millis();
