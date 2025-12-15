@@ -22,15 +22,10 @@ The device is controlled by the INFO/RESET button on the left steering lever. Bo
 <img src="https://github.com/user-attachments/assets/ce9224c2-028c-481c-9bc8-398bd6714e60">
 
 ## Purchased components * Покупные компоненты:
-Arduino Nano
-2 MCP2515
-DC-DC преобразователь (12v до 5v)
-Разъём OBD2 (опционально)
-
-- https://aliexpress.ru/item/1005009497676801.html - 2шт
-- https://aliexpress.ru/item/32915861640.html - 1шт
-- https://aliexpress.ru/item/1005002538696313.html - 1шт
-- https://aliexpress.ru/item/1005007870477550.html - 1шт
+- MCP2515 - https://aliexpress.ru/item/1005009497676801.html - 2шт
+- Arduino Nano - https://aliexpress.ru/item/32915861640.html - 1шт
+- DC-DC преобразователь (12В -> 5В) - https://aliexpress.ru/item/1005002538696313.html - 1шт
+- Разъём OBD2 - https://aliexpress.ru/item/1005007870477550.html - 1шт
 
 ## List of used literature * Список использованной литературы:
 1. https://hackingvolvo.blogspot.com/
