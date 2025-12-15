@@ -18,8 +18,10 @@ The device is controlled by the INFO/RESET button on the left steering lever. Bo
 ![sch](https://github.com/user-attachments/assets/737c2150-9948-446e-b447-fc642b59534f)
 
 ## Explosion-circuit diagram of the cross-board assembly * Взрыв-схема кросс-платы в сборе:
-<img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e" />
-<img src="https://github.com/user-attachments/assets/3238c791-a25b-4c7e-9276-64b939b83fe8" />
+<img src="https://github.com/user-attachments/assets/c637afbc-205e-4980-8052-bc60a41fc31e">
+<img src="https://github.com/user-attachments/assets/3238c791-a25b-4c7e-9276-64b939b83fe8">
+<img src="https://github.com/user-attachments/assets/5415219c-383e-43d8-9707-bf82338e823e" />
+<img src="https://github.com/user-attachments/assets/ce9224c2-028c-481c-9bc8-398bd6714e60" />
 
 ## Purchased components * Покупные компоненты:
 - https://aliexpress.ru/item/1005009497676801.html - 2шт
