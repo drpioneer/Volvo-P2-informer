@@ -41,6 +41,6 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 17. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html
 18. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
-Mirror on DRIVE2: https://www.drive2.ru/l/718050088366114704/
+Mirror on DRIVE2: https://www.drive2.com/l/718050088366114704/
 
 **If you use the code or like the solution, mark it with an asterisk, it's not difficult for you, but I'm pleased!**
