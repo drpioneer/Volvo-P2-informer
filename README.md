@@ -5,6 +5,43 @@ Software and hardware solution based on ArduinoNano +2x MCP2515, connected to CA
 
 The device is controlled by the RESET button on the left steering lever. Both short presses (changing the current parameter) and long button presses (disabling/enabling the display on the dashboard screen) are recognized. The code uses ideas and developments from various authors found on the Internet. The basic functionality of the solution was tested on the XC90 2011 model year. I assume that the prototype will work without changing the code for Volvo P2 2005 and newer cars. For the Volvo P2 1998-2004 vehicle, it will be necessary to correct the parameters of the high-speed CAN bus and specify other identifiers of the target CAN modules. The project is completed according to the desire, strength and capabilities. I am sure that the project code is imperfect and contains errors. Tips and constructive criticism on improving the code are welcome.
 
+# List of output parameters
+* TCM temperature ATF
+* TCM S1 solenoid status
+* TCM S2 solenoid status
+* TCM S3 solenoid status
+* TCM S4 solenoid status
+* TCM S5 solenoid status
+* TCM SLT solenoid current
+* TCM SLS solenoid current
+* TCM SLU solenoid current
+* TCM gearbox position
+* ECM coolant temperature
+* ECM atmospheric pressure
+* ECM boost pressure
+* ECM intake air temperature
+* ECM A/C pressure
+* ECM A/C compressor activ
+* ECM engine speed
+* ECM engine fan duty
+* ECM ignition misfires number
+* ECM fuel pressure
+* ECM fuel pump duty
+* ECM TCV duty
+* ECM throttle angle
+* ECM air flow meter
+* ECM VVT inlet angle
+* ECM VVT exhaust angle
+* ECM BTDC
+* DEM pump current
+* DEM solenoid current
+* DEM oil pressure
+* DEM oil temperature
+* REM battery voltage
+* CCM evaporator temperature
+* CCM cabin temperature
+* CCM cabin fan speed
+
 ## Device prototype
 ![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
 
