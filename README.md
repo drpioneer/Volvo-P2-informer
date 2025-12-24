@@ -1,5 +1,5 @@
 # Volvo P2 informer
-Reading and displaying parameters on the dashboard of the Volvo P2
+Reading and displaying parameters on the dashboard of the Volvo P2.
 
 ![IMG_20251117_173650](https://github.com/user-attachments/assets/d68cac6f-8f70-4a17-8365-0c095f5f8ee4)
 
@@ -61,24 +61,25 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 - Connector OBD2 - https://aliexpress.ru/item/1005007870477550.html - 1
 
 ## List of used literature
-1. https://hackingvolvo.blogspot.com/
-2. https://github.com/hackingvolvo
-3. https://hackingvolvoxc90.blogspot.com/
-4. https://www.drive2.com/l/9769115
-5. https://www.drive2.com/l/9824565/
-6. https://www.drive2.com/l/9878147/
-7. https://www.drive2.com/l/458462539873794364/
-8. https://www.drive2.com/l/634000945637755124/
-9. https://github.com/vtl/volvo-ddd
-10. https://github.com/vtl/volvo-kenwood
-11. https://www.drive2.com/l/712830156913249071/
-12. https://www.drive2.com/l/717368116278996470/
-13. https://www.drive2.com/l/523338948592799298/
-14. https://github.com/olegel/VolvoCan
-15. https://github.com/olegel/CANLogger
-16. https://github.com/latonita/arduino-canbus-monitor
-17. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html
-18. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
+1. https://github.com/coryjfowler/MCP_CAN_lib
+2. https://hackingvolvo.blogspot.com/
+3. https://github.com/hackingvolvo
+4. https://hackingvolvoxc90.blogspot.com/
+5. https://www.drive2.com/l/9769115
+6. https://www.drive2.com/l/9824565/
+7. https://www.drive2.com/l/9878147/
+8. https://www.drive2.com/l/458462539873794364/
+9. https://www.drive2.com/l/634000945637755124/
+10. https://github.com/vtl/volvo-ddd
+11. https://github.com/vtl/volvo-kenwood
+12. https://www.drive2.com/l/712830156913249071/
+13. https://www.drive2.com/l/717368116278996470/
+14. https://www.drive2.com/l/523338948592799298/
+15. https://github.com/olegel/VolvoCan
+16. https://github.com/olegel/CANLogger
+17. https://github.com/latonita/arduino-canbus-monitor
+18. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html
+19. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
 Mirror on DRIVE2: https://www.drive2.com/l/718050088366114704/
 
