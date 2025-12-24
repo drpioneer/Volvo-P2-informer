@@ -80,4 +80,4 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 
 Mirror on DRIVE2: https://www.drive2.com/l/718050088366114704/
 
-**If you use the code or like the solution, mark it with an asterisk, it's not difficult for you, but I'm pleased!**
+## **If you use the code or like the solution, mark it with an asterisk, it's not difficult for you, but I'm pleased!**
