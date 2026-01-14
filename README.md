@@ -44,21 +44,22 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 * CCM cabin temperature
 * CCM cabin fan speed
 
-## Device prototype
-![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
-
-## Electrical connection diagram
-![sch](https://github.com/user-attachments/assets/737c2150-9948-446e-b447-fc642b59534f)
-
-## Explosion-circuit diagram of the cross-board assembly
-<img src="https://github.com/user-attachments/assets/5415219c-383e-43d8-9707-bf82338e823e">
-<img src="https://github.com/user-attachments/assets/ce9224c2-028c-481c-9bc8-398bd6714e60">
 
 ## Purchased components
 - Arduino Nano - https://aliexpress.ru/item/32915861640.html - 1
 - MCP2515 - https://aliexpress.ru/item/1005009497676801.html - 2
 - DC-DC step down converter (12v -> 5v) - https://aliexpress.ru/item/1005002538696313.html - 1
 - Connector OBD2 - https://aliexpress.ru/item/1005007870477550.html - 1
+
+## Electrical connection diagram
+![sch](https://github.com/user-attachments/assets/737c2150-9948-446e-b447-fc642b59534f)
+
+## Device prototype
+![prototype](https://github.com/user-attachments/assets/880a559b-e174-4b7b-ac5e-add334906784)
+
+## Explosion-circuit diagram of the cross-board assembly
+<img src="https://github.com/user-attachments/assets/5415219c-383e-43d8-9707-bf82338e823e">
+<img src="https://github.com/user-attachments/assets/ce9224c2-028c-481c-9bc8-398bd6714e60">
 
 ## Ready-made device
 <img src="https://github.com/user-attachments/assets/6fcfaf06-1954-4a6e-8fdc-41e1b0afdd2e">
