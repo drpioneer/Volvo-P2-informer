@@ -60,6 +60,10 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 - DC-DC step down converter (12v -> 5v) - https://aliexpress.ru/item/1005002538696313.html - 1
 - Connector OBD2 - https://aliexpress.ru/item/1005007870477550.html - 1
 
+## Ready-made device
+<img src="https://github.com/user-attachments/assets/6fcfaf06-1954-4a6e-8fdc-41e1b0afdd2e">
+<img src="https://github.com/user-attachments/assets/de32407d-2b76-4e70-aec8-14e0a0ff4562">
+
 ## List of used literature
 1. https://github.com/coryjfowler/MCP_CAN_lib
 2. https://hackingvolvo.blogspot.com/
