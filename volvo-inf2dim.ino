@@ -5,17 +5,20 @@
  * Designed to ArduinoNano & 2x MCP2515
  * Code uses ideas and practices of different authors, available in open sources
  * tested on Volvo XC90 2011
- * (c) 2025 drPioneer
+ * (c) 2026 drPioneer
  */
 
 #include "mcp_can.h"
 
-#define            LS_CAN_QRZ   MCP_8MHZ                                              // frequency of quartz resonator for LS-CAN driver
-#define            HS_CAN_QRZ   MCP_8MHZ                                              // frequency of quartz resonator for HS-CAN driver
-#define            LS_CAN_INT   2                                                     // assigning interrupt pin to LS-CAN receiving buffer
-#define            HS_CAN_INT   3                                                     // assigning interrupt pin to HS-CAN receiving buffer
+// hardware parameters:
 MCP_CAN             LS_CAN_CS   (9);                                                  // using CS-pin for using LS-CAN driver
 MCP_CAN             HS_CAN_CS   (10);                                                 // using CS-pin for using HS-CAN driver
+#define            LS_CAN_INT   2                                                     // assigning interrupt pin to LS-CAN receiving buffer
+#define            HS_CAN_INT   3                                                     // assigning interrupt pin to HS-CAN receiving buffer
+#define            LS_CAN_QRZ   MCP_8MHZ                                              // frequency of quartz resonator for LS-CAN driver
+#define            HS_CAN_QRZ   MCP_8MHZ                                              // frequency of quartz resonator for HS-CAN driver
+
+// configurable parameters:
 #define                NON_ID   0x00000000ul                                          // none module id
 #define                DEM_ID   0x01204001ul                                          // differential electronic module (2005+)
 //#define              ECM_ID   0x00800021ul                                          // engine control module (????-2004)
@@ -46,14 +49,14 @@ MCP_CAN             HS_CAN_CS   (10);                                           
 #define           LCD_ENABLE2   {0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x31}      // command_2 to turn on LCD, 2005+ or 2003-2004
 #define           LCD_DISABLE   {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04}      // command to turn off LCD
 #define             LCD_CLEAR   {0xe1, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}      // command to clear LCD
-//#define            INFO_BUT   0xc0                                                  // button 'INFO' code (2000-2001)
-#define              INFO_BUT   0xbf                                                  // button 'INFO' code (2005+)
-//#define       BYTE_INFO_BUT   0x04                                                  // button 'INFO' byte (2000-2001)
-#define         BYTE_INFO_BUT   0x07                                                  // button 'INFO' byte (2005+)
+//#define           RESET_BUT   0xc0                                                  // button 'RESET' code (2000-2001)
+#define             RESET_BUT   0xbf                                                  // button 'RESET' code (2005+)
+//#define      BYTE_RESET_BUT   0x04                                                  // button 'RESET' byte (2000-2001)
+#define        BYTE_RESET_BUT   0x07                                                  // button 'RESET' byte (2005+)
 #define                   STD   0                                                     // CAN packet parameter: STANDART
 #define                   EXT   1                                                     // CAN packet parameter: EXTENDED
 #define                   LEN   8                                                     // CAN packet parameter: LENGTH
-#define                    MS   30                                                    // delay between requests (ms)
+#define                    MS   15                                                    // delay between requests (ms)
 #define                  WAIT   50                                                    // response waiting time (ms)
 #define                 POLLS   1000                                                  // pause between polls (ms)
 
@@ -67,11 +70,11 @@ struct request_t {
                          char   text[16];                                             // text message
 }                static const   req[] PROGMEM = {                                     // table place in PROGram MEMory
 //
-// ------------------------------------------------------------------------------------------------------------------+
-//   id  |                     command                     |          formula parameters         |       text        |
+// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//   id  |                     command                     |          formula parameters         |       text        |     comment
 //       |                                                 |   a     b     c     d     e     f   |                   |  
 //       |                                    calculated value = ((rxBuf[a] * 2^b + rxBuf[c] / 2^d) / 2^e - f)       |
-// ------------------------------------------------------------------------------------------------------------------|
+// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xb8, 0x01, 0x00, 0x00}, {0x05, 0x01, 0x05, 0x00, 0x02, 0x30}, "COOLANT TEMP"    }, // ECM_coolant temperature        =  byte[5] * 0.75 - 48
   {TCM_ID, {0xcc, 0x6e, 0xa5, 0x0c, 0x01, 0x00, 0x00, 0x00}, {0x06, 0x08, 0x07, 0x00, 0x00, 0x00}, "ATF TEMP"        }, // TCM_temperature ATF            =  byte[6] * 256 + byte[7]
   {TCM_ID, {0xcc, 0x6e, 0xa5, 0x06, 0x01, 0x00, 0x00, 0x00}, {0x04, 0x00, 0x05, 0x08, 0x00, 0x00}, "S1 SLND"         }, // TCM_S1 solenoid status         =  byte[4]
@@ -92,10 +95,10 @@ struct request_t {
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x01, 0x01, 0x00, 0x00}, {0x05, 0x04, 0x04, 0x00, 0x00, 0xb0}, "AC PRESS"        }, // ECM A/C pressure               =  byte[5] * 13.54 - 176
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x0f, 0x04, 0x00, 0x0f, 0x00}, "COMPRESSOR ACT"  }, // ECM_A/C compressor activ       =  byte[5] & 1
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x93, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x02, 0x00}, "ENGINE RPM"      }, // ECM_engine speed               = (byte[5] * 256  + byte[6]) / 4
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x51, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "SHRT-TERM FC"    }, // ECM short-term fuel correction =((byte[5] * 256  + byte[6]) * 2.0) / 65535
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x4c, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x04, 0x00}, "LONG-TERM FC L"  }, // ECM long-term fuel corr low    = (byte[5] + byte[6]) * 0.046875
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x4e, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "LONG-TERM FC M"  }, // ECM long-term fuel corr medium = (byte[5] + byte[6]) * 0.00003052
-  {ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x50, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "LONG-TERM FC H"  }, // ECM long-term fuel corr high   = (byte[5] + byte[6]) * 0.00003052
+//{ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0x51, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "SHRT-TERM FC"    }, // ECM short-term fuel correction =((byte[5] * 256  + byte[6]) * 2.0) / 65535
+//{ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x4c, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x04, 0x00}, "LONG-TERM FC L"  }, // ECM long-term fuel corr low    = (byte[5] + byte[6]) * 0.046875
+//{ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x4e, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "LONG-TERM FC M"  }, // ECM long-term fuel corr medium = (byte[5] + byte[6]) * 0.00003052
+//{ECM_ID, {0xcd, 0x7a, 0xa6, 0x11, 0x50, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x15, 0x00}, "LONG-TERM FC H"  }, // ECM long-term fuel corr high   = (byte[5] + byte[6]) * 0.00003052
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x12, 0x48, 0x01, 0x00, 0x00}, {0x05, 0x10, 0x05, 0x00, 0x08, 0x00}, "ENG FAN"         }, // ECM_Engine fan duty            =  byte[5] * 100 / 255
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x10, 0xad, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x00, 0x00}, "MISFIRES"        }, // ECM_ignition misfires number   =  byte[5] * 256 + byte[6]
   {ECM_ID, {0xcd, 0x7a, 0xa6, 0x15, 0x7d, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x04, 0x45}, "FUEL PRESS"      }, // ECM fuel pressure              = (byte[5] * 256 + byte[6]) * 0.0724792480 - 69
@@ -110,15 +113,15 @@ struct request_t {
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x05, 0x01, 0x00, 0x00}, {0x07, 0x08, 0x08, 0x00, 0x00, 0x00}, "DEM SLND"        }, // DEM solenoid current           =  byte[7] * 256 + byte[8]
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x03, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x05, 0x06, 0x00, 0x00}, "OIL PRESS"       }, // DEM oil pressure               =  byte[5] * 0.0164
   {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x02, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x05, 0x10, 0x00, 0x00}, "OIL TEMP"        }, // DEM oil temperature            = (signed char)byte[5]
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x08, 0x00, 0x09, 0x00, 0x06, 0x00}, "FL SPD"          }, // DEM FL velocity                = (byte[8] * 256 + bytes[9]) * 0.0156
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x07, 0x00, 0x06, 0x00}, "FR SPD"          }, // DEM FR velocity                = (byte[6] * 256 + bytes[7]) * 0.0156
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x0c, 0x00, 0x0d, 0x00, 0x06, 0x00}, "RL SPD"          }, // DEM RL velocity                = (byte[12] * 256 + bytes[13]) * 0.0156
-  {DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x0a, 0x00, 0x0b, 0x00, 0x06, 0x00}, "RR SPD"          }, // DEM RR velocity                = (byte[10] * 256 + bytes[11]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x08, 0x00, 0x09, 0x00, 0x06, 0x00}, "FL SPD"          }, // DEM FL velocity                = (byte[8] * 256 + bytes[9]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x06, 0x00, 0x07, 0x00, 0x06, 0x00}, "FR SPD"          }, // DEM FR velocity                = (byte[6] * 256 + bytes[7]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x0c, 0x00, 0x0d, 0x00, 0x06, 0x00}, "RL SPD"          }, // DEM RL velocity                = (byte[12] * 256 + bytes[13]) * 0.0156
+//{DEM_ID, {0xcd, 0x1a, 0xa6, 0x00, 0x06, 0x01, 0x00, 0x00}, {0x0a, 0x00, 0x0b, 0x00, 0x06, 0x00}, "RR SPD"          }, // DEM RR velocity                = (byte[10] * 256 + bytes[11]) * 0.0156
   {REM_ID, {0xcd, 0x46, 0xa6, 0xd0, 0xd4, 0x01, 0x00, 0x00}, {0x05, 0x00, 0x05, 0x10, 0x03, 0x00}, "BAT VOLT"        }, // REM battery voltage            =  byte[5] / 8
   {CCM_ID, {0xcd, 0x29, 0xa6, 0x00, 0x01, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x06, 0x64}, "EVAPORATOR"      }, // CCM evaporator temperature     =  byte[5] * 256 + byte[6]) * 0.015625 - 100
   {CCM_ID, {0xcd, 0x29, 0xa6, 0x00, 0xa1, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x06, 0x64}, "CAB TEMP"        }, // CCM cabin temperature          =  byte[5] * 256 + byte[6]) * 0.015625 - 100
   {CCM_ID, {0xcd, 0x29, 0xa6, 0x00, 0x30, 0x01, 0x00, 0x00}, {0x05, 0x08, 0x06, 0x00, 0x06, 0x00}, "CAB FAN SPD"     }, // CCM cabin fan speed            =  byte[5] * 256 + byte[6]) * 0.015625
-// ------------------------------------------------------------------------------------------------------------------+
+// -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 };
 
 uint32_t              CANrxId = 0;                                                    // header of LS-CAN packet for receiving
@@ -132,6 +135,7 @@ uint8_t             curScreen = 0;                                              
 boolean             enableLCD = true;                                                 // indicates screen is active
 const uint8_t   TOTAL_SCREENS = sizeof(req) / sizeof(request_t);                      // total screens number
 const uint16_t     LONG_PRESS = 1000;                                                 // long press duration
+uint8_t            RSTbutstat = 0;                                                    // RESET button status
 
 /**
  * @brief  Structure stores current calculated values
@@ -361,9 +365,10 @@ uint16_t GetModelYearFromVIN(const char* vin) {
  * @retval  none
  */
 void setup() {
-  Serial.begin(115200);
-  if (!SetupLSCAN())  HardFault();                                                    // init LS-CAN 125kbps
-  char vin[18]        = {0};                                                          // 17 characters VIN + \0
+  delay(1000);                                                                        // delay in connecting diagnostic connector
+  Serial.begin(115200);                                                               // virtual serial port initialization
+  if (!SetupLSCAN())  HardFault();                                                    // LS-CAN 125kbps initialization
+  char vin[18]        = {0};                                                          // 17 characters VIN + null
   uint16_t model_year = 0;                                                            // vehicle model year 
   boolean hs_500kbps  = true;
   if (ReadVIN(vin)) {                                                                 // VIN request to determine model year
@@ -374,11 +379,11 @@ void setup() {
       Serial.println(model_year);
     };
   } else { Serial.println("Using default: 500 kbps HS-CAN (2005+)"); };
-  if (!SetupHSCAN(hs_500kbps))  HardFault();                                          // init HS-CAN
-  EnableLCD();                                                                        // LCD turn on
+  if (!SetupHSCAN(hs_500kbps))  HardFault();                                          // HS-CAN initialization
   ClearLCD();
+  EnableLCD();                                                                        // LCD turn ON
   PrintScreen(false, 0, "*   VOLVO P2   *", 0, "*   INFORMER   *");
-  delay(1000);
+  delay(1000);                                                                        // delay to demonstrate greeting
 }
 
 /**
@@ -389,11 +394,11 @@ void setup() {
 void HandlerSWM(uint8_t *buf) {
   static uint32_t pressStart = 0;                                                     // button press time
   static boolean   isPressed = false;                                                 // button current status
-  if (buf[BYTE_INFO_BUT] == INFO_BUT) {                                               // when 'RESET' button on SWM is pressed
+  if (buf[BYTE_RESET_BUT] == RESET_BUT) {                                             // when 'RESET' button on SWM is pressed
     if (!isPressed) {
       isPressed = true;
       pressStart = millis();
-      Serial.println("Button pressed");
+      Serial.println("RESET button pressed");
     };
     if (isPressed && (millis() - pressStart >= LONG_PRESS)) {                         // long button press
       isPressed = false;
@@ -403,9 +408,11 @@ void HandlerSWM(uint8_t *buf) {
   } else {
     if (isPressed) {
       if (millis() - pressStart < LONG_PRESS) {                                       // short button press
-        curScreen++;
-        if (curScreen >= TOTAL_SCREENS)   curScreen = 0;
-        Serial.println("Short press");
+        Serial.println("Short press detected");
+        if (enableLCD) {
+          curScreen++;
+          if (curScreen >= TOTAL_SCREENS)   curScreen = 0;
+        };
       };
       isPressed = false;
     };
@@ -522,16 +529,18 @@ void loop() {
     lastEnableLCD = enableLCD;
   };
   ReadLSCAN();                                                                        // listening LS-CAN for button pressing
-  if (millis() - startTime >= POLLS) {                                                // pause between polls
-    for (uint8_t i = 0; i < TOTAL_SCREENS; i++) {
-      RequestResponseCAN(i);                                                          // request-response via CAN-bus
-      ReadLSCAN();
+  if (enableLCD) {
+    if (millis() - startTime >= POLLS) {                                              // pause between polls
+      for (uint8_t i = 0; i < TOTAL_SCREENS; i++) {
+        RequestResponseCAN(i);                                                        // request-response via CAN-bus
+        ReadLSCAN();
+      };
+      for (uint8_t i = 0; i < 16; i++) {
+        txt1[i] = pgm_read_byte(&req[curScreen].text[i]);                             // buffer filling with text line1
+        txt2[i] = pgm_read_byte(&req[nexScreen].text[i]);                             // buffer filling with text line2
+      }
+      PrintScreen(result[curScreen].rdy, result[curScreen].res, txt1, result[nexScreen].res, txt2); // print 'value + txt'
+      startTime = millis();
     };
-    for (uint8_t i = 0; i < 16; i++) {
-      txt1[i] = pgm_read_byte(&req[curScreen].text[i]);                               // buffer filling with text line1
-      txt2[i] = pgm_read_byte(&req[nexScreen].text[i]);                               // buffer filling with text line2
-    }
-    PrintScreen(result[curScreen].rdy, result[curScreen].res, txt1, result[nexScreen].res, txt2); // print 'value + txt'
-    startTime = millis();
   };
 }
