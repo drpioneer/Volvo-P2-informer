@@ -4,7 +4,7 @@ Reading and displaying parameters on the dashboard of the Volvo P2.
 Mirror on DRIVE2: https://www.drive2.com/l/718050088366114704/
 
 Description of the assembly process:
-https://www.drive2.ru/b/725490483551273309/
+https://www.drive2.com/b/725490483551273309/
 
 ![IMG_20251117_173650](https://github.com/user-attachments/assets/d68cac6f-8f70-4a17-8365-0c095f5f8ee4)
 
