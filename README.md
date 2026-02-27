@@ -78,17 +78,18 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 5. https://www.drive2.com/l/9769115
 6. https://www.drive2.com/l/9824565/
 7. https://www.drive2.com/l/9878147/
-8. https://www.drive2.com/l/458462539873794364/
-9. https://www.drive2.com/l/634000945637755124/
-10. https://github.com/vtl/volvo-ddd
-11. https://github.com/vtl/volvo-kenwood
-12. https://www.drive2.com/l/712830156913249071/
-13. https://www.drive2.com/l/717368116278996470/
-14. https://www.drive2.com/l/523338948592799298/
-15. https://github.com/olegel/VolvoCan
-16. https://github.com/olegel/CANLogger
-17. https://github.com/latonita/arduino-canbus-monitor
-18. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html
-19. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
+8. https://www.drive2.com/l/492899793811538208/
+9. https://www.drive2.com/l/458462539873794364/
+10. https://www.drive2.com/l/634000945637755124/
+11. https://github.com/vtl/volvo-ddd
+12. https://github.com/vtl/volvo-kenwood
+13. https://www.drive2.com/l/712830156913249071/
+14. https://www.drive2.com/l/717368116278996470/
+15. https://www.drive2.com/l/523338948592799298/
+16. https://github.com/olegel/VolvoCan
+17. https://github.com/olegel/CANLogger
+18. https://github.com/latonita/arduino-canbus-monitor
+19. https://we.easyelectronics.ru/autoelectro/podklyuchenie-knopok-upravleniya-magnitoloy-po-can.html
+20. https://www.motor-talk.de/forum/der-can-bus-im-volvo-t4420570.html?page=5
 
 ## **If you use the code or like the solution, mark it with an asterisk, it's not difficult for you, but I'm pleased!**
