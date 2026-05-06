@@ -5,7 +5,7 @@
  * https://www.drive2.com/b/725490483551273309/
  * Designed to ArduinoNano & 2x MCP2515
  * Code uses ideas and practices of different authors, available in open sources
- * tested on Volvo XC70 2001
+ * tested on Volvo XC70 2.4T 2001
  * (c) 2026 drPioneer
  */
 
