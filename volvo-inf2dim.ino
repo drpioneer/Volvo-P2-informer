@@ -2,9 +2,10 @@
  * VOLVO P2 Informer
  * https://github.com/drpioneer/Volvo-P2-informer/
  * https://www.drive2.com/l/718050088366114704/
+ * https://www.drive2.com/b/725490483551273309/
  * Designed to ArduinoNano & 2x MCP2515
  * Code uses ideas and practices of different authors, available in open sources
- * tested on Volvo XC90 2011
+ * tested on Volvo XC90 2.5T 2011
  * (c) 2026 drPioneer
  */
 
