@@ -71,9 +71,10 @@ The device is controlled by the RESET button on the left steering lever. Both sh
 <img src="https://github.com/user-attachments/assets/de32407d-2b76-4e70-aec8-14e0a0ff4562">
 
 ## User reviews
-1. https://www.drive2.ru/l/726041613754705650/
-2. https://www.drive2.ru/l/727196650719683903/
-3. https://www.drive2.ru/l/734301694858365635/
+* https://www.drive2.ru/l/724324176592128834/
+* https://www.drive2.ru/l/726041613754705650/
+* https://www.drive2.ru/l/727196650719683903/
+* https://www.drive2.ru/l/734301694858365635/
 
 ## List of used literature
 1. https://github.com/coryjfowler/MCP_CAN_lib
